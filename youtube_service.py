@@ -126,7 +126,7 @@ def get_audio_ytdlp(video_id):
     ydl_opts = {
         'quiet': True,
         'no_warnings': True,
-        'format': 'bestaudio/best',
+        'format': 'worst[height<=360]/bestaudio/best',
         'extract_flat': False,
     }
 
@@ -281,3 +281,4 @@ def extract_video_id(url):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
+
