@@ -126,20 +126,25 @@ def get_audio_ytdlp(video_id):
     ydl_opts = {
         'quiet': True,
         'no_warnings': True,
+        # 优先选择最低画质的视频（包含音频），如果没有则选择纯音频
         'format': 'worst[height<=360]/bestaudio/best',
         'extract_flat': False,
+        # 添加更多选项以绕过 bot 检测
+        'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(f'https://www.youtube.com/watch?v={video_id}', download=False)
 
-        # 获取最佳音频格式
+        # 获取音频/视频 URL
         audio_url = None
         if 'url' in info:
             audio_url = info['url']
         elif 'formats' in info:
+            # 优先选择有音频的最低画质视频
             for fmt in info['formats']:
-                if fmt.get('acodec') != 'none' and fmt.get('vcodec') == 'none':
+                if fmt.get('acodec') != 'none':
                     audio_url = fmt.get('url')
                     break
 
@@ -243,6 +248,9 @@ def format_duration(seconds):
     if not seconds:
         return "未知"
 
+    # 确保是整数
+    seconds = int(seconds)
+
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
     secs = seconds % 60
@@ -255,6 +263,9 @@ def format_duration_long(seconds):
     """格式化时长为 XmYs"""
     if not seconds:
         return "未知"
+
+    # 确保是整数
+    seconds = int(seconds)
 
     hours = seconds // 3600
     minutes = (seconds % 3600) // 60
@@ -281,4 +292,3 @@ def extract_video_id(url):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
-
