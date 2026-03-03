@@ -2,8 +2,9 @@ FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
-# 复制 go.mod 和 go.sum
-COPY youtube_go.mod go.mod
+# 复制 go.mod 和代码
+COPY go.mod .
+COPY go.sum .
 COPY youtube_service.go .
 
 # 下载依赖
