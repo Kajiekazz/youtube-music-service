@@ -4,7 +4,6 @@ WORKDIR /app
 
 # 复制 go.mod 和代码
 COPY go.mod .
-COPY go.sum .
 COPY youtube_service.go .
 
 # 下载依赖
